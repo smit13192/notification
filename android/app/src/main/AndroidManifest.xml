@@ -3,9 +3,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/> 
 
     <!-- This permission for awesome notification in package permission  -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
-        android:label="notification"
+        android:label="Notification App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
