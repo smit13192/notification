@@ -2,8 +2,12 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:notification/core/router/routes.dart';
 import 'package:notification/util/log.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 /// handle background notification
 Future<void> handleBackground(RemoteMessage message) async {
@@ -49,6 +53,7 @@ class NotificationService {
       sound: true,
     );
     _firebaseMessaging.getInitialMessage().then(handleMessage);
+    _firebaseMessaging.setAutoInitEnabled(true);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.onBackgroundMessage(handleBackground);
     FirebaseMessaging.onMessage.listen((event) {
@@ -73,6 +78,9 @@ class NotificationService {
 
     await _flutterLocalNotificationPlugin.initialize(
       settings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse:
+          onDidReceiveNotificationResponse,
     );
 
     final androidPlartformImplementation =
@@ -117,5 +125,12 @@ class NotificationService {
     );
   }
 
-  void handleMessage(RemoteMessage? message) async {}
+  void handleMessage(RemoteMessage? message) async {
+    if (message == null) return;
+    navigatorKey.currentState?.pushNamed(Routes.notification);
+  }
+}
+
+void onDidReceiveNotificationResponse(NotificationResponse details) {
+  navigatorKey.currentState?.pushNamed(Routes.notification);
 }
